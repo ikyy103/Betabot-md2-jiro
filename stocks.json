@@ -1,0 +1,26 @@
+{
+  "stocks": {
+    "6285215900524@s.whatsapp.net": {
+      "BitCoin": 1e+282,
+      "BBCoin": 1e+282
+    },
+    "6281520415300@s.whatsapp.net": {},
+    "62895393590460@s.whatsapp.net": {}
+  },
+  "stockPrices": {
+    "BitCoin": 6796996893,
+    "ElaCoin": 41132598136,
+    "KirCoin": 22562156999,
+    "RulCoin": 37831231479,
+    "RenCoin": 22702382834,
+    "FCoin": 48820150664,
+    "MCoin": 63052406484,
+    "ZerCoin": 13818296412,
+    "BBCoin": 27037088745,
+    "StCoin": 87408254515
+  },
+  "lastMonitorTime": {
+    "6285215900524@s.whatsapp.net": 1739300499363,
+    "6281520415300@s.whatsapp.net": 1740925269625
+  }
+}
