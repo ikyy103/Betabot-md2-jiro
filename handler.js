@@ -399,12 +399,12 @@ module.exports = {
                     if (!('penjara' in user)) user.penjara = false
                     if (!('dirawat' in user)) user.dirawat = false
                     if (!isNumber(user.antarpaket)) user.antarpaket = 0
-                    if (!user.lbars) user.lbars = '[▒▒▒▒▒▒▒▒▒]'
+                    if (!user.lbars) user.lbars = '[â–’â–’â–’â–’â–’â–’â–’â–’â–’]'
                     if (!user.premium) user.premium = false
                     if (!user.premiumTime) user.premiumTime= 0
                     if (!user.vip) user.vip = 'tidak'
                     if (!isNumber(user.vipPoin)) user.vipPoin = 0
-                    if (!user.role) user.role = 'Newbie ㋡'
+                    if (!user.role) user.role = 'Newbie ã‹¡'
                     if (!('autolevelup' in user)) user.autolevelup = true
                     if (!('lastIstigfar' in user)) user.lastIstigfar = true
                   
@@ -769,8 +769,8 @@ module.exports = {
                     penjara: false, 
                     antarpaket: 0,
                     dirawat: false, 
-                    lbars: '[▒▒▒▒▒▒▒▒▒]', 
-                    role: 'Newbie ㋡', 
+                    lbars: '[â–’â–’â–’â–’â–’â–’â–’â–’â–’]', 
+                    role: 'Newbie ã‹¡', 
                     registered: false,
                     name: this.getName(m.sender),
                     age: -1,
@@ -815,7 +815,7 @@ module.exports = {
                 if (!('isBannedTime' in chat)) chat.isBannedTime = false
                 if (!('mute' in chat)) chat.mute = false
                 if (!('listStr' in chat)) chat.listStr = {}
-                if (!('sWelcome' in chat)) chat.sWelcome = '*Selamat datang @user!*\n\n     Di group @subject\n\n╭─────「 *intro* 」\n│\n│─⪼ Nama : \n│─⪼ Umur :\n│─⪼ Askot :\n│─⪼ Gender :\n╰─────────────\n\n> semoga betah'
+                if (!('sWelcome' in chat)) chat.sWelcome = '*Selamat datang @user!*\n\n     Di group @subject\n\nâ•­â”€â”€â”€â”€â”€ã€Œ *intro* ã€\nâ”‚\nâ”‚â”€âª¼ Nama : \nâ”‚â”€âª¼ Umur :\nâ”‚â”€âª¼ Askot :\nâ”‚â”€âª¼ Gender :\nâ•°â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€\n\n> semoga betah'
                 if (!('sBye' in chat)) chat.sBye = 'Al-fatihah untuk @user'
                 if (!('sPromote' in chat)) chat.sPromote = ''
                 if (!('sDemote' in chat)) chat.sDemote = ''
@@ -854,7 +854,9 @@ module.exports = {
                 if (!('notifgempa' in chat)) chat.notifgempa = false
                 if (!('notifcuaca' in chat)) chat.notifcuaca = false
                 if (!('notifsholat' in chat)) chat.notifsholat = false
+                if (!('autotranslate' in chat)) chat.autotranslate = false
             } else global.db.data.chats[m.chat] = {
+                autotranslate: false,
                 notifsholat: false,
                 notifgempa: false,
                 notifcuaca: false,    
@@ -870,7 +872,7 @@ module.exports = {
                 isBannedTime: false,
                 mute: false,
                 listStr: {},
-                sWelcome: '*Selamat datang @user!*\n\n     Di group @subject\n\n╭─────「 *intro* 」\n│\n│─⪼ Nama : \n│─⪼ Umur :\n│─⪼ Askot :\n│─⪼ Gender :\n╰─────────────\n\n> semoga betah',
+                sWelcome: '*Selamat datang @user!*\n\n     Di group @subject\n\nâ•­â”€â”€â”€â”€â”€ã€Œ *intro* ã€\nâ”‚\nâ”‚â”€âª¼ Nama : \nâ”‚â”€âª¼ Umur :\nâ”‚â”€âª¼ Askot :\nâ”‚â”€âª¼ Gender :\nâ•°â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€\n\n> semoga betah',
                 sBye: 'Al-fatihah untuk @user',
                 sPromote: '',
                 sDemote: '',
