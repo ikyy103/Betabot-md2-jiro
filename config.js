@@ -16,11 +16,11 @@ global.maxwarn = '2' // Peringatan maksimum
 global.antiporn = true // Auto delete pesan porno (bot harus admin)
 
 //INI WAJIB DI ISI!//
-global.lann = 'beta-Satriaop' 
+global.lann = 'isi_apikey' 
 //Daftar terlebih dahulu https://api.betabotz.eu.org
 
 //INI OPTIONAL BOLEH DI ISI BOLEH JUGA ENGGA//
-global.btc = 'c8583b20'
+global.btc = 'isi_apikey'
 //Daftar https://api.botcahx.eu.org 
 
 global.APIs = {   
