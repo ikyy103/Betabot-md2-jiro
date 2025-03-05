@@ -7,17 +7,17 @@
 - Fitur 90% implementasi dari website api
 - Penambah output url expres.js agar bisa di jalankan di render dsb.
 - Informasi api [WhatsApp](https://whatsapp.com/channel/0029VaApYsQ5Ui2c2rKbpP0S)
-- Informasi Bot [Whatsapp](https://whatsapp.com/channel/0029VaiIG3UJpe8n3Y2MZ51z)
+- Informasi Bot [Whatsapp](https://whatsapp.com/channel/0029VacioNI6GcGLdAYO6Y1w)
   ## Note!
   **Important :**
   
-- Untuk menggunakan bot ini, kamu diwajibkan mengisi ApiKey terlebih dahulu. Jika tidak mengisinya, bot tidak akan berfungsi dengan baik.
+- Untuk menggunakan bot ini, kamu diwajibkan mengisi ApiKey terlebih dahulu. Jika tidak mengisinya, bot tidak akan berfungsi secara maksimal.
 - Tidak disarankan menginstal bot ini di termux atau panel yang tidak mempunyai kelengkapan express, ffmpeg, imagemagick, webp.
   
-- Menggunakan 60% fitur dari [`RestApi`](https://api.betabotz.eu.org) sebagai media downloader
+- Menggunakan 60% fitur dari [`RestApi`](https://api.betabotz.eu.org) sebagai media downloader dan berbagai resapi lain nya
 
 
-## ApiKey Harga
+## Harga Apikey Betabotz
 
 | No | Plan/Role    | Limit          | Expired         | Harga |
 |----|--------------|----------------|-----------------|-------|
@@ -38,7 +38,7 @@
 
 
 ## Group Bot
-- Group Bot [`Join`](https://chat.whatsapp.com/G4f1fTpz9zL4EH3FyIcaPR)
+- Group Bot [`Join`](https://chat.whatsapp.com/CSmZAL8efZy4ijCWedJVX9)
 - Group Api [`Join`](https://chat.whatsapp.com/DJLpJEZ5QFO5nzAoGcJO71)
 ## Support
 
@@ -70,8 +70,8 @@ Original base [`Link`](https://github.com/HelgaIlham/ZukaBet)
 * Unduh & Instal ImageMagick [`Klik Disini`](https://imagemagick.org/script/download.php)
 
 ```javascript
-git clone https://github.com/ERLANRAHMAT/BETABOTZ-MD2
-cd BETABOTZ-MD2
+git clone https://github.com/Satriaop/Betabot-md2-jiro
+cd Betabot-md2-jiro
 npm i
 npm start
 ```
@@ -85,3 +85,4 @@ node index.js --pairing
 
 ##### All Contributors
 [`All Contri`](https://contributor.betabotz.eu.org)
+- Jiro
