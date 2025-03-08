@@ -1,4 +1,4 @@
-const { sKata, cKata } = require('.././lib/sambung-kata');
+const { sKata, cKata } = require('../lib/sambung-kata');
 
 const game = `• *S A M B U N G - K A T A*
 
