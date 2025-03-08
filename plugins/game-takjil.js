@@ -1,6 +1,7 @@
 const fs = require('fs');
 const path = './takjil_data.json';
 
+// Data takjil & harga
 const takjilList = [
     { name: "Kolak Pisang", price: 5000 },
     { name: "Es Buah", price: 7000 },
@@ -10,6 +11,7 @@ const takjilList = [
     { name: "Cendol", price: 6500 }
 ];
 
+// Fungsi membaca & menyimpan data pengguna
 const readData = () => {
     if (!fs.existsSync(path)) return {};
     return JSON.parse(fs.readFileSync(path));
@@ -41,24 +43,24 @@ let handler = async (m, { conn, args, text, usedPrefix, command }) => {
 
     if (command === 'daftartakjil') {
         let takjilData = users[user].takjil;
-        if (Object.keys(takjilData).length === 0) return m.reply(`× Kamu belum memiliki takjil.`);
+        if (Object.keys(takjilData).length === 0) return m.reply(`❌ Kamu belum memiliki takjil.`);
 
         let list = Object.entries(takjilData).map(([takjil, jumlah]) => `🍽 ${takjil} x${jumlah}`).join('\n');
         m.reply(`📜 **Daftar Takjil Kamu:**\n${list}`);
     }
 
     if (command === 'jualtakjil') {
-        if (!text) return m.reply(`× Gunakan: *${usedPrefix}jualtakjil <nama takjil>*\nContoh: *${usedPrefix}jualtakjil Kolak Pisang*`);
+        if (!text) return m.reply(`❌ Gunakan: *${usedPrefix}jualtakjil <nama takjil>*\nContoh: *${usedPrefix}jualtakjil Kolak Pisang*`);
 
         let takjil = takjilList.find(t => t.name.toLowerCase() === text.toLowerCase());
-        if (!takjil) return m.reply(`× Takjil tidak ditemukan!`);
+        if (!takjil) return m.reply(`❌ Takjil tidak ditemukan!`);
 
-        if (!users[user].takjil[takjil.name] || users[user].takjil[takjil.name] <= 0) return m.reply(`× Kamu tidak memiliki ${takjil.name}!`);
+        if (!users[user].takjil[takjil.name] || users[user].takjil[takjil.name] <= 0) return m.reply(`❌ Kamu tidak memiliki ${takjil.name}!`);
 
         users[user].takjil[takjil.name]--;
         if (users[user].takjil[takjil.name] === 0) delete users[user].takjil[takjil.name];
 
-        users[user].money += takjil.price;
+        users[user].balance += takjil.price;
         saveData(users);
 
         m.reply(`💰 Kamu menjual **${takjil.name}** seharga **Rp${takjil.price.toLocaleString()}**!`);
