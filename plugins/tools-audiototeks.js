@@ -11,12 +11,10 @@ let handler = async (m, { conn, usedPrefix, command }) => {
         let fileSizeLimit = 10 * 1024 * 1024; // Maksimal 10MB
         if (media.length > fileSizeLimit) throw "⚠️ Ukuran file terlalu besar! Maksimal 10MB.";
 
-        // Upload audio ke server file hosting
         let fileUrl = await uploadFile(media);
         if (!fileUrl) throw "⚠️ Gagal mengunggah audio!";
 
-        // Kirim ke API BetaBotz untuk transkripsi
-        let apiUrl = `https://api.betabotz.eu.org/api/search/bard-audio?url=${fileUrl}&text=berikan+transkripsi+dari+audio+tersebut?&apikey=beta-Satriaop`;
+        let apiUrl = `https://api.betabotz.eu.org/api/search/bard-audio?url=${fileUrl}&text=berikan+transkripsi+dari+audio+tersebut?&apikey=${lann}`;
         let response = await fetch(apiUrl);
         let data = await response.json();
 
