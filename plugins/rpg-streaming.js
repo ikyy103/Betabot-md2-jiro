@@ -2,19 +2,24 @@ let handler = async (m, { conn, command, args }) => {
     let user = global.db.data.users[m.sender];
     const tag = `@${m.sender.replace(/@.+/, '')}`;
     const platforms = {
-        'tt': 'TikTok',
-        'ig': 'Instagram',
-        'fb': 'Facebook',
-        'dc': 'Discord',
+        'tiktok': 'TikTok',
+        'instagram': 'Instagram',
+        'facebook': 'Facebook',
+        'discord': 'Discord',
     };
 
     try {
-        let platformKey = command.match(/ttlive|iglive|fblive|dclive/)[0].replace('live', '');
+        let platformKey = command.match(/ttlive|iglive|fblive|dclive/)[0]
+            .replace('tt', 'tiktok')
+            .replace('ig', 'instagram')
+            .replace('fb', 'facebook')
+            .replace('dc', 'discord')
+            .replace('live', '');
         let platform = platforms[platformKey];
 
         // Validasi akun pengguna
         if (!user[`${platformKey}_account`]) {
-            return conn.reply(m.chat, `Hey ${tag},\nBuat akun ${platform} terlebih dahulu\nKetik: .createakun${platformKey}`, m);
+            return conn.reply(m.chat, `Hey ${tag},\nBuat akun ${platform} terlebih dahulu\nKetik: .createakun${platformKey} <username>`, m);
         }
 
         // Validasi dan pengaturan judul
