@@ -15,24 +15,33 @@ const rules = `• *R U L E S*
  500xp X jumlah pemain
 - .skata untuk join
 - .skata start untuk memulai
+- .skata reset untuk mereset sesi game (khusus admin atau owner)
 `.trim();
 
 let poin = 500;
 
-let handler = async (m, { conn, text, isPrems, isROwner, usedPrefix, command }) => {
+let handler = async (m, { conn, text, isPrems, isROwner, isAdmin, usedPrefix, command }) => {
     let isDebug = /debug/i.test(command) && isROwner;
-    //if (!isPrems) throw `Game ini dalam tahap pengemmbangan.. cooming soon`
     conn.skata = conn.skata ? conn.skata : {};
-    // try {
     let id = m.chat;
+    
+    if (text == 'reset') {
+        if (!isAdmin && !isROwner) throw 'Hanya admin atau owner yang dapat mereset sesi game!';
+        if (!(id in conn.skata)) throw 'Tidak ada sesi game yang sedang berlangsung!';
+        
+        delete conn.skata[id];
+        return conn.reply(m.chat, 'Sesi game telah direset!', m);
+    }
+
     let kata = await genKata();
     let room_all = Object.values(conn.skata).find(room => room.id !== id && room.player.includes(m.sender));
     if (room_all) throw `Kamu sedang bermain sambung kata di chat lain, selesaikan game kamu terlebih dahulu`;
+    
     if (id in conn.skata) {
         let room = conn.skata[id];
         let member = room.player;
         if (room.status == 'play') {
-            if (!room.waktu._destroyed && !room.diam) return conn.reply(m.chat, `Hii @${m.sender.split`@`[0]}, Masih ada game berlangsung di chat ini\nTunggu hingga game berakhir\nLalu ikut bergabung`, room.chat, { contextInfo: { mentionedJid: member } }).catch(e => { return !1 }); // ketika naileys err
+            if (!room.waktu._destroyed && !room.diam) return conn.reply(m.chat, `Hii @${m.sender.split`@`[0]}, Masih ada game berlangsung di chat ini\nTunggu hingga game berakhir\nLalu ikut bergabung`, room.chat, { contextInfo: { mentionedJid: member } });
             delete conn.skata[id];
         }
         if (text == 'start' && room.status == 'wait') {
@@ -99,9 +108,6 @@ Dan hanya bisa dimainkan oleh player yang terdaftar`.trim();
             waktu: false
         };
     }
-    // } catch (e) {
-    //  throw e
-    // }
 };
 
 handler.help = ['sambungkata'];
@@ -125,31 +131,23 @@ function filter(text) {
     let mati = ["q", "w", "r", "t", "y", "p", "s", "d", "f", "g", "h", "j", "k", "l", "z", "x", "c", "v", "b", "n", "m"];
     let misah;
     if (text.length < 3) return text;
-    // alarm
+
     if (/([qwrtypsdfghjklzxcvbnm][qwrtypsdfhjklzxcvbnm])$/.test(text)) {
         let mid = /([qwrtypsdfhjklzxcvbnm])$/.exec(text)[0];
         return mid;
     }
 
-    // mati + voc + ng {kijang, pisang, dalang, dll}
-
     if (/([qwrtypsdfghjklzxcvbnm][aiueo]ng)$/.test(text)) {
         let mid = /([qwrtypsdfghjklzxcvbnm][aiueo]ng)$/.exec(text)[0];
         return mid;
     }
-    // voc2x + mati(optional) {portofolio, manusia, tiup, dll}
+
     else if (/([aiueo][aiueo]([qwrtypsdfghjklzxcvbnm]|ng)?)$/i.test(text)) {
-        if (/(ng)$/i.test(text)) return text.substring(text.length - 3); // ex tiang, riang, siang
+        if (/(ng)$/i.test(text)) return text.substring(text.length - 3);
         else if (/([qwrtypsdfghjklzxcvbnm])$/i.test(text)) return text.substring(text.length - 2);
         else return text.substring(text.length - 1);
     }
-    // ng/ny + voc + mati { sinyal, langit, banyak, dll}
-    else if (/n[gy]([aiueo]([qwrtypsdfghjklzxcvbnm])?)$/.test(text)) {
-        let nyenye = /n[gy]/i.exec(text)[0];
-        misah = text.split(nyenye);
-        return nyenye + misah[misah.length - 1];
-    }
-    // mati { kuku, batu, kamu, aku, saya, dll}
+
     else {
         let res = Array.from(text).filter(v => mati.includes(v));
         let resu = res[res.length - 1];
@@ -159,9 +157,6 @@ function filter(text) {
             }
         }
         misah = text.split(resu);
-        if (text.endsWith(resu)) {
-            return resu + misah[misah.length - 2] + resu;
-        }
         return resu + misah[misah.length - 1];
     }
 }
