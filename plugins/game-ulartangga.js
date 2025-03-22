@@ -91,7 +91,7 @@ delete ut[m.chat]
     if(!text || !Object.keys(nazz_cmd).includes(text)) return conn.sendMessage(m.chat, { text: `Halo! Selamat datang di Ular Tangga, permainan klasik yang penuh petualangan dan tantangan! Di sini, pemain harus melewati rintangan dan naik tangga untuk mencapai angka 100 dan menjadi pemenang. Tapi hati-hati, ada ular licin yang bisa membuatmu turun kembali, dan tangga yang akan membantumu meloncat lebih cepat ke puncak! 🐍🎲\n\nAyo, bergabunglah dalam petualangan seru di Ular Tangga dan rasakan keseruannya! 🎯🎮\n\nBerikut ini beberapa command ular tangga:\n${Object.keys(nazz_cmd).map(v => "⬡ "+v).join("\n")}\n\nContoh penggunaan: .ulartangga create`, contextInfo: {
             externalAdReply: {  
                 title: 'Ular Tangga', 
-                body: 'Created by nazz',
+                body: 'Created by Zephyr',
                 thumbnailUrl: "https://telegra.ph/file/f5d7192eea4848b112d7b.jpg", 
                 sourceUrl: 'youtube.com',
                 mediaType: 1,
