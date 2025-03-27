@@ -2,9 +2,8 @@ const fs = require("fs");
 const fetch = require("node-fetch");
 
 let handler = async (m, { args }) => {
+    if (!args[0]) return m.reply("⚠️ Masukkan link raw file yang ingin diupdate!");
 
-    if (!args[0]) return m.reply("⚠️ Masukin link raw file yang mau diupdate!");
-    
     let updatedFiles = [];
 
     const updateFile = async (url) => {
@@ -20,7 +19,18 @@ let handler = async (m, { args }) => {
 
             let fileData = await res.text();
             fs.writeFileSync(`./${path}`, fileData);
-            updatedFiles.push(`🗃️ Updated: ./${path}`);
+
+            let fileName = path.split("/").pop().replace(".js", "");
+            let splitCommand = fileName.split("-");
+            if (splitCommand.length < 2) throw new Error("⚠️ Format nama file salah! Gunakan format kategori-command.js");
+
+            let category = splitCommand[0]; 
+            let commandName = splitCommand.slice(1).join("-");
+
+            let infoOptions = ["new", "update"];
+            let info = infoOptions[Math.floor(Math.random() * infoOptions.length)];
+
+            updatedFiles.push(`𝗖𝗼𝗺𝗺𝗮𝗻𝗱 : *${commandName}*\n𝗧𝗮𝗴𝘀 : *${category}*\n𝗜𝗻𝗳𝗼 : *${info}*\n`);
         } catch (err) {
             updatedFiles.push(`❌ Error: ${err.message}`);
         }
@@ -28,7 +38,7 @@ let handler = async (m, { args }) => {
 
     await Promise.all(args.map(updateFile));
 
-    m.reply(`🔄 **UPDATE SELESAI!**\n\n${updatedFiles.join("\n")}\n\n⏳ Restarting bot...`);
+    m.reply(`🔄 *UPDATE SELESAI!*\n\n${updatedFiles.join("\n")}\n⏳ Restarting bot...`);
 
     setTimeout(() => {
         process.exit(1);
