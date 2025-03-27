@@ -6,6 +6,7 @@ global.nameowner = 'Zephyr';
 global.numberowner = '6281547205987';
 global.mail = 'satriahubdeals@gmail.com';
 global.gc = 'https://chat.whatsapp.com/CSmZAL8efZy4ijCWedJVX9';
+global.saluran = 'https://whatsapp.com/channel/0029VacioNI6GcGLdAYO6Y1w';
 global.instagram = 'https://instagram.com/satriaonly2024';
 global.wm = '© Jiro';
 global.wait = '_*Tunggu sedang di proses...*_';
