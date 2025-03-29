@@ -1,5 +1,5 @@
 let handler = async (m, { conn, text, command }) => {
-    if (!text) throw `Silakan masukkan pesan yang ingin Anda ${command}.\n\nContoh: .${command} Bot sering error ketika digunakan.`;
+    if (!text) throw `Silakan masukkan pesan yang ingin Anda ${command}.\n\nContoh: .${command} Fitur brat | error 404`;
 
     const ownerNumber = global.owner[0] + '@s.whatsapp.net'; // Ganti sesuai nomor owner
     const sender = m.sender;
