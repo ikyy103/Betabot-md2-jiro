@@ -32,6 +32,10 @@ global.maelyn = 'isi_apikey';
 // ini bebas mau di isi apa ga //
 global.fastrestapis = 'isi_apikey';
 
+// wajib isi //
+global.gemini = 'isi_apikey';
+// dapatkan di ➡ https://ai.google.dev/gemini-api/docs?hl=id
+
 
 global.APIs = {   
   lann: 'https://api.betabotz.eu.org',
