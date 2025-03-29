@@ -16,6 +16,11 @@ global.packname = 'Made With';
 global.author = 'Bot WhatsApp';
 global.maxwarn = '2'; // Peringatan maksimum
 global.antiporn = true; // Auto delete pesan porno (bot harus admin)
+// untuk Instrgasi pembayaran dan pembelian orkut bebas di isi atau ga
+global.idorkut = 'isi_id';
+global.pinorkut = 'isi_id';
+global.pworkut = 'isi_id';
+// untuk mendapatkan id orkut di okeconnect dan jika masih belum daftar, daftar ke cs orkut via telegram
 
 // INI WAJIB DI ISI! //
 global.lann = 'isi_apikey'; 
