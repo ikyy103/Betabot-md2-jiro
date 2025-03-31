@@ -41,12 +41,16 @@ global.fastrestapis = 'isi_apikey';
 global.gemini = 'isi_apikey';
 // dapatkan di ➡ https://ai.google.dev/gemini-api/docs?hl=id
 
+// untuk penggunaan Dood stream //
+global.dood = 'isi_apikey';
+// dapatkan apikey di web : https://doodstream.com/settings
 
 global.APIs = {   
   lann: 'https://api.betabotz.eu.org',
   btc: 'https://api.botcahx.eu.org',
   maelyn: 'https://api.maelyn.tech',
-  fastrestapis: 'https://fastrestapis.fasturl.cloud'
+  fastrestapis: 'https://fastrestapis.fasturl.cloud', 
+  dood: 'https://doodapi.com'
 };
 
 global.APIKeys = { 
@@ -54,6 +58,7 @@ global.APIKeys = {
   'https://api.botcahx.eu.org': global.btc,
   'https://api.maelyn.tech': global.maelyn,
   'https://fastrestapis.fasturl.cloud': global.fastrestapis
+  'https://doodapi.com': global.dood
 };
 
 let fs = require('fs');
