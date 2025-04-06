@@ -11,10 +11,10 @@ const paymentConfig = {
         90: 60000,
         365: 120000,
     },
-    qrisCode: '00020101021126670016COM.NOBUBANK.WWW01189360050300000879140214501318136711360303UMI51440014ID.CO.QRIS.WWW0215ID20253689159010303UMI5204541153033605802ID5919SAT STORE OK20975566013MINAHASA TENG61059599562070703A0163048925',
+    qrisCode: '${qriscode}',
     apikey: 'hafiza',
-    merchant: 'OK2097556',
-    keyorkut: '907537717367414962097556OKCT4DFD1CB58971AF6FF0D2FCC6F1DF2CCD',
+    merchant: '${idorkut}',
+    keyorkut: '${keyorkut}',
 };
 
 const handler = async (m, { conn, args, usedPrefix }) => {
