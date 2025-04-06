@@ -1,144 +1,80 @@
-const paymentConfig = {
-    prices: {
-            3: 5000,      // 3 Hari
-        7: 10000,      // 1 Minggu
-        14: 12000,    // 2 Minggu
-        21: 14000,    // 3 Minggu
-        30: 15000,    // 1 Bulan
-        60: 30000,    // 2 Bulan
-        90: 60000,    // 3 Bulan
-        365: 120000,   // 1 Tahun
-    },
-    email: 'satriamahadmadanir@gmail.com',
-    userID: 'Jirodonate',
-    name: 'Jirodonate',
+const axios = require('axios');
 
-};
+const paymentConfig = { prices: { 3: 5000, 7: 10000, 14: 12000, 21: 14000, 30: 15000, 60: 30000, 90: 60000, 365: 120000, }, qrisCode: '00020101021126670016COM.NOBUBANK.WWW01189360050300000879140214501318136711360303UMI51440014ID.CO.QRIS.WWW0215ID20253689159010303UMI5204541153033605802ID5919SAT STORE OK20975566013MINAHASA TENG61059599562070703A0163048925', apikey: 'hafiza', merchant: 'OK2097556', keyorkut: '907537717367414962097556OKCT4DFD1CB58971AF6FF0D2FCC6F1DF2CCD', };
 
-const checkSaweriaPayment = async (userID, nominal, conn, m, user) => {
-    let isChecking = false;
-    let maxChecks = 5;
-    let attempts = 0;
+const handler = async (m, { conn, args, usedPrefix }) => { const user = global.db.data.users[m.sender]; const days = args[0] ? parseInt(args[0]) : 0;
 
+if (!days || isNaN(days) || days < 3) {
+    return conn.reply(m.chat, '*📋 Daftar Harga Premium*
+
+' + Object.entries(paymentConfig.prices).map(([d, p]) => • ${d} Hari: Rp${p}).join('\n') + \n\nKetik *${usedPrefix}buyprem <jumlah hari>* untuk membeli premium. Contoh: *${usedPrefix}buyprem 30*, m); }
+
+const amount = paymentConfig.prices[days];
+if (!amount) {
+    return conn.reply(m.chat, '❌ Jumlah hari tidak valid. Silakan pilih dari daftar harga yang tersedia.', m);
+}
+
+if (user.dana >= amount) {
+    user.dana -= amount;
+    const now = Date.now();
+    const duration = days * 86400000;
+    user.premium = true;
+    user.premiumTime = user.premiumTime && user.premiumTime > now
+        ? user.premiumTime + duration
+        : now + duration;
+
+    return conn.reply(m.chat, `✅ *Pembelian Premium Berhasil!*
+
+⏳ Durasi: ${days} Hari 💰 Harga: Rp${amount} 🏦 Metode: Saldo Internal`, m); }
+
+try {
+    const { qrisCode, apikey } = paymentConfig;
+    const response = await axios.get(`https://hafiza.apixd.my.id/api/orkut/createpayment?apikey=${apikey}&amount=${amount}&codeqr=${encodeURIComponent(qrisCode)}`);
+    const qrisData = response.data;
+
+    if (!qrisData || !qrisData.status || !qrisData.result.qrImageUrl) {
+        return conn.reply(m.chat, '⚠️ Gagal membuat pembayaran QRIS. Silakan coba lagi nanti.', m);
+    }
+
+    const expirationTime = new Date(qrisData.result.expirationTime).toLocaleString('id-ID', { timeZone: 'Asia/Jakarta' });
+    await conn.sendMessage(m.chat, {
+        image: { url: qrisData.result.qrImageUrl },
+        caption: `✅ *Silakan lakukan pembayaran!*
+
+💰 Jumlah: Rp${amount} ⏳ Durasi Premium: ${days} Hari 📌 Scan QR berikut untuk membayar. ⏳ Expired: ${expirationTime}\n\nTunggu proses konfirmasi pembayaran otomatis...` }, { quoted: m });
+
+let lastDate = null;
     const interval = setInterval(async () => {
-        if (attempts >= maxChecks) {
-            clearInterval(interval);
-            if (user.payment) delete user.payment;
-            conn.reply(m.chat, '❌ Verifikasi pembayaran gagal. Silakan coba lagi nanti.', m);
-            return;
-        }
-
-        attempts++;
-        if (isChecking) return; // Hindari overlap permintaan
-        isChecking = true;
-
         try {
-            console.log(`🔍 Verifikasi pembayaran (${attempts}/${maxChecks}) untuk refID: ${user.payment?.refID}`);
+            const statusResponse = await axios.get(`https://hafiza.apixd.my.id/api/orkut/cekstatus?apikey=${apikey}&merchant=${paymentConfig.merchant}&keyorkut=${paymentConfig.keyorkut}`);
+            const statusData = statusResponse.data;
 
-            const response = await fetch(`https://itzpire.com/saweria/check-payment?id=${user.payment?.refID}&user_id=${userID}`);
-            if (!response.ok) {
-                throw new Error('Gagal menerima respons dari server.');
-            }
+            const transactionDate = new Date(statusData.date);
+            const currentTime = new Date();
+            const timeDiff = Math.abs(currentTime - transactionDate) / 1000;
 
-            const checkJson = await response.json();
-            console.log(`📄 Respons API:`, checkJson);
-
-            if (checkJson.msg === "OA4XSN" || (checkJson.status === "success" && checkJson.data?.status === "success")) {
+            if (lastDate !== statusData.date && timeDiff <= 15) {
                 clearInterval(interval);
-
-                const duration = getPremiumDurationFromNominal(nominal);
-                if (!duration) {
-                    conn.reply(m.chat, '❌ Nominal tidak valid untuk aktivasi premium.', m);
-                    return;
-                }
+                lastDate = statusData.date;
 
                 const now = Date.now();
+                const duration = days * 86400000;
                 user.premium = true;
-                user.premiumTime = user.premiumTime && user.premiumTime > now 
-                    ? user.premiumTime + duration 
+                user.premiumTime = user.premiumTime && user.premiumTime > now
+                    ? user.premiumTime + duration
                     : now + duration;
-                delete user.payment;
 
-                const successMessage = `✅ *Pembayaran Berhasil!*\n\n💰 *Nominal:* Rp${nominal}\n⏳ *Premium Aktif Selama:* ${duration / 86400000} Hari`;
-                await conn.sendMessage(m.chat, { text: successMessage }, { quoted: m });
-                return;
-            }
+                conn.reply(m.chat, `✅ *Pembayaran berhasil!*
 
-            if (checkJson.data?.status === "failed") {
-                clearInterval(interval);
-                delete user.payment;
-                conn.reply(m.chat, '❌ Pembayaran gagal. Silakan coba lagi.', m);
-            } else {
-                console.log(`Status pembayaran: ${checkJson.data?.status || 'pending'}. Proses berlanjut...`);
-            }
-        } catch (error) {
-            console.error(`❌ Kesalahan Verifikasi Pembayaran:`, error.message);
-            conn.reply(m.chat, `❌ Kesalahan saat memverifikasi pembayaran: ${error.message}`, m);
-        } finally {
-            isChecking = false;
-        }
-    }, 20000); // Interval pengecekan setiap 20 detik
+⏳ Durasi Premium: ${days} Hari 💰 Jumlah: Rp${amount} 🏦 Metode: ${statusData.brand_name} 🔢 Referensi: ${statusData.issuer_reff}\n\nTerima kasih telah mendukung bot ini!`, m); } } catch (error) { console.error('Gagal mengecek status pembayaran:', error); } }, 10000);
+
+} catch (error) {
+    console.error('Error saat membuat QRIS:', error);
+    conn.reply(m.chat, '⚠️ Terjadi kesalahan dalam memproses pembayaran.', m);
+}
+
 };
 
-// Pastikan fungsi handler juga menangani kesalahan dengan baik
-const handler = async (m, { conn, text }) => {
-    const jumlahHari = parseInt(text);
-
-    if (!jumlahHari || isNaN(jumlahHari) || jumlahHari < 3) {
-        return conn.reply(m.chat, '*📋 Daftar Harga Premium*\n\n' +
-            Object.entries(paymentConfig.prices).map(([days, price]) => `• ${days} Hari: Rp${price}`).join('\n') +
-            '\n\nKetik *.buyprem <jumlah hari>* untuk membeli premium. Contoh: *.buyprem 90*', m);
-    }
-
-    const nominal = paymentConfig.prices[jumlahHari];
-    if (!nominal) {
-        return conn.reply(m.chat, '❌ Jumlah hari tidak valid. Silakan pilih dari daftar harga yang tersedia.', m);
-    }
-
-    const { email, userID, name } = paymentConfig;
-    const message = `Pembayaran sebesar Rp${nominal}`;
-
-    await conn.reply(m.chat, `⏳ Anda akan melakukan pembelian premium sebesar Rp${nominal} untuk ${jumlahHari} hari. Silakan lakukan pembayaran melalui QR code yang muncul nanti.`, m);
-
-    try {
-        const response = await fetch(`https://itzpire.com/saweria/create-payment?amount=${nominal}&name=${encodeURIComponent(name)}&email=${encodeURIComponent(email)}&user_id=${userID}&msg=${encodeURIComponent(message)}`);
-        if (!response.ok) {
-            throw new Error('Gagal membuat pembayaran. Silakan coba lagi.');
-        }
-
-        const paymentJson = await response.json();
-
-        if (paymentJson.status === "success" && paymentJson.data) {
-            const { qr_image: qrImage, url: paymentUrl } = paymentJson.data;
-
-            let user = global.db.data.users[m.sender];
-            if (!user) user = global.db.data.users[m.sender] = { saldo: 0 };
-
-            user.payment = {
-                refID: paymentJson.data.id,
-                amount: nominal,
-                status: 'pending',
-                qrImage,
-                paymentUrl
-            };
-
-            await conn.sendMessage(m.chat, {
-                image: { url: qrImage },
-                caption: `🎉 *Pembelian Premium*\n\n💰 *Total Pembayaran:* Rp${nominal}\n⏳ *Durasi Premium:* ${jumlahHari} Hari\n\n📌 *Langkah Pembayaran:*\n1. Scan QR code di bawah ini menggunakan aplikasi pembayaran.\n2. Pastikan nominal pembayaran sesuai (Rp${nominal}).\n3. Tunggu proses verifikasi (maksimal 5 menit).\n\n🌐 *Link Pembayaran:*\n[Klik untuk Membayar](${paymentUrl})\n\n> © Zephyr-CODER`,
-            }, { quoted: m });
-
-            checkSaweriaPayment(userID, nominal, conn, m, user);
-        } else {
-            throw new Error(paymentJson.error_msg || 'Terjadi kesalahan yang tidak diketahui.');
-        }
-    } catch (error) {
-        console.error("Kesalahan API:", error);
-        conn.reply(m.chat, `Terjadi kesalahan saat membuat QR code pembayaran. ${error.message}`, m);
-    }
-};
-
-handler.help = ['buyprem <jumlah hari>'];
-handler.tags = ['info'];
-handler.command = /^(buyprem)$/i;
+handler.help = ['buyprem <jumlah hari>']; handler.tags = ['info']; handler.command = /^(buyprem)$/i; handler.register = true;
 
 module.exports = handler;
