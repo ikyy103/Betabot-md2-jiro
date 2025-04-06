@@ -17,12 +17,13 @@ global.author = 'Bot WhatsApp';
 global.maxwarn = '2'; // Peringatan maksimum
 global.antiporn = true; // Auto delete pesan porno (bot harus admin)
 // untuk Instrgasi pembayaran dan pembelian orkut bebas di isi atau ga
-global.idorkut = 'isi_id';
+global.idorkut = 'isi_merchant';
 global.pinorkut = 'isi_id';
 global.pworkut = 'isi_id';
+global.keyorkut = 'isi_keyorkut'
 global.qriscode = 'isi_qriscode';
 // untuk mendapatkan nya klick web berikut ini dan https://api.betabotz.eu.org/qrcode upload qris orkut jika lain nya tidak bisa. 
-// untuk mendapatkan id orkut di okeconnect dan jika masih belum daftar, daftar ke cs orkut via telegram
+// untuk mendapatkan pw dan key orkut di okeconnect dan jika masih belum daftar, daftar ke cs orkut via telegram, key dan i
 
 // INI WAJIB DI ISI! //
 global.lann = 'isi_apikey'; 
