@@ -1,43 +1,65 @@
-const axios = require('axios')
-const FormData = require('form-data') 
+/*
+──────────────────────────────────────────
+🌩️ Code by AlfiDev - CloudKuImages Uploader
+📛 Jangan hapus watermark ini, hargai pembuatnya.
+📦 Types: Plugins ESM + CJS
+ℹ️ Notes: npm install cloudku-uploader@latest
+📲 Channel: https://whatsapp.com/channel/0029VasizxI47XeE2iiave0u
+Notes: Tourl Uploaders All files without php 
+──────────────────────────────────────────
+*/
+const { uploadFile } = require('cloudku-uploader'); // Pastikan uploadFile diimpor dengan benar
+const { Buffer } = require('buffer');
 
-let handler = async (m) => {
-  let q = m.quoted ? m.quoted : m
-  let mime = (q.msg || q).mimetype || ''
-  if (!mime) throw 'Tidak ada media yang ditemukan'
+let handler = async (m, { conn }) => {
+    try {
+        let q = m.quoted ? m.quoted : m;
+        let mime = (q.msg || q).mimetype || '';
+        let fileBuffer, fileName;
 
-  let media = await q.download()
-  let fileSizeLimit = 15 * 1024 * 1024 // Maksimal 15MB bebas atur sendiri
-  if (media.length > fileSizeLimit) {
-    throw 'Ukuran media tidak boleh melebihi 15MB'
-  }
+        if (mime) {
+            fileBuffer = await q.download();
+            let ext = mime.split('/')[1] || 'bin';
+            fileName = `upload.${ext}`;
+        } else if (q.text) {
+            fileBuffer = Buffer.from(q.text, 'utf-8');
+            fileName = 'upload.txt';
+        } else {
+            return m.reply('🚨 Tidak ada media atau teks yang ditemukan!');
+        }
 
-  let isImageOrVideo = /image\/(png|jpe?g|gif)|video\/mp4/.test(mime)
+        let loading = await m.reply('⏳ Mengupload file ke CloudKuImages...');
 
-  let form = new FormData()
-  form.append('file', media, { filename: 'upload' })
+        const result = await uploadFile(fileBuffer, fileName);
 
-  try {
-    let { data } = await axios.post('https://fastrestapis.fasturl.cloud/downup/uploader-v1', form, {
-      headers: {
-        ...form.getHeaders(),
-        'Content-Type': 'multipart/form-data'
-      }
-    })
+        if (result?.status === 'success') {
+            const { filename, type, size, url } = result.result;
+            const infoURL = result.information || 'https://cloudkuimages.com/ch';
 
-    if (data.status === 200) {
-      m.reply(`✔️ *Upload Berhasil!*\n📂 Link: ${data.result}\n📦 Ukuran: ${media.length} Byte(s)\n⏳ Expired: ${isImageOrVideo ? 'Tidak Ada' : '24 Jam'}`)
-    } else {
-      throw 'Upload gagal, coba lagi nanti'
+            let caption = `✅ *Upload Berhasil!*\n\n` +
+                          `📮 *URL:* ${url}\n` +
+                          `📂 *Nama:* ${filename}\n` +
+                          `📛 *Tipe:* ${type}\n` +
+                          `📊 *Ukuran:* ${size}\n` +
+                          `ℹ️ *Info:* ${infoURL}`;
+
+            await conn.sendMessage(m.chat, { text: caption }, { quoted: m });
+        } else {
+            await conn.sendMessage(m.chat, {
+                text: `🚨 Upload gagal.\n\nServer Response:\n${JSON.stringify(result, null, 2)}`
+            }, { quoted: m });
+        }
+
+        await conn.sendMessage(m.chat, { delete: loading.key });
+
+    } catch (err) {
+        console.error(err);
+        await m.reply('🚨 Terjadi kesalahan internal saat proses upload.');
     }
-  } catch (e) {
-    console.error(e) // Menambahkan log error untuk debugging
-    throw 'Terjadi kesalahan saat mengunggah file'
-  }
-}
+};
 
-handler.help = ['tourl <reply media>']
-handler.tags = ['tools']
-handler.command = /^(upload|tourl)$/i
+handler.help = ['tourl', 'upload'];
+handler.tags = ['tools'];
+handler.command = /^(tourl|upload)$/i;
 
-module.exports = handler
+module.exports = handler;
