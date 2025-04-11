@@ -2,8 +2,8 @@ let handler = async (m, { conn, usedPrefix }) => {
     let sig = 'https://www.instagram.com/@satriaonly2024';
     let sgh = 'https://github.com/satriahubdeals';
     let sfb = 'Belum tersedia';
-    let stt = 'tidak tersedia';
-    let stt2 = 'tidak ada';
+    let stt = 'https://www.tiktok.com/@botwhatsappinfo?_t=ZS-8vRNkRvQerw&_r=1';
+    let stt2 = 'https://www.tiktok.com/@jirobriliance?_t=ZS-8vRNmwRPqL7&_r=1';
     let stele = 't.me/@Satriaonly2024';
     let syt = 'https://www.youtube.com/@satriahubdeals';
     let today = new Date();
