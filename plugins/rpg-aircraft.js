@@ -1,106 +1,97 @@
-const { distance } = require('../lib/scrape.js');
-
-const handler = async (m, { conn, command, args }) => {
+const handler = async (m, { conn, args }) => {
     const countries = [
-        'Afghanistan', 'Albania', 'Algeria', 'Andorra', 'Angola', 'Antigua and Barbuda', 'Argentina', 'Armenia', 'Australia',
-        'Austria', 'Azerbaijan', 'Bahamas', 'Bahrain', 'Bangladesh', 'Barbados', 'Belarus', 'Belgium', 'Belize', 'Benin', 'Bhutan',
-        'Bolivia', 'Bosnia and Herzegovina', 'Botswana', 'Brazil', 'Brunei', 'Bulgaria', 'Burkina Faso', 'Burundi', 'Cabo Verde',
-        'Cambodia', 'Cameroon', 'Canada', 'Central African Republic', 'Chad', 'Chile', 'China', 'Colombia', 'Comoros', 'Congo (Congo-Brazzaville)',
-        'Congo (Congo-Kinshasa)', 'Costa Rica', 'Croatia', 'Cuba', 'Cyprus', 'Czech Republic', 'Denmark', 'Djibouti', 'Dominica', 
-        'Dominican Republic', 'East Timor', 'Ecuador', 'Egypt', 'El Salvador', 'Equatorial Guinea', 'Eritrea', 'Estonia', 'Eswatini', 
-        'Ethiopia', 'Fiji', 'Finland', 'France', 'Gabon', 'Gambia', 'Georgia', 'Germany', 'Ghana', 'Greece', 'Grenada', 'Guatemala', 
-        'Guinea', 'Guinea-Bissau', 'Guyana', 'Haiti', 'Honduras', 'Hungary', 'Iceland', 'India', 'Indonesia', 'Iran', 'Iraq', 'Ireland', 
-        'Israel', 'Italy', 'Ivory Coast', 'Jamaica', 'Japan', 'Jordan', 'Kazakhstan', 'Kenya', 'Kiribati', 'Kosovo', 'Kuwait', 'Kyrgyzstan', 
-        'Laos', 'Latvia', 'Lebanon', 'Lesotho', 'Liberia', 'Libya', 'Liechtenstein', 'Lithuania', 'Luxembourg', 'Madagascar', 'Malawi', 
-        'Malaysia', 'Maldives', 'Mali', 'Malta', 'Marshall Islands', 'Mauritania', 'Mauritius', 'Mexico', 'Micronesia', 'Moldova', 'Monaco', 
-        'Mongolia', 'Montenegro', 'Morocco', 'Mozambique', 'Myanmar', 'Namibia', 'Nauru', 'Nepal', 'Netherlands', 'New Zealand', 'Nicaragua', 
-        'Niger', 'Nigeria', 'North Korea', 'North Macedonia', 'Norway', 'Oman', 'Pakistan', 'Palau', 'Panama', 'Papua New Guinea', 'Paraguay', 
-        'Peru', 'Philippines', 'Poland', 'Portugal', 'Qatar', 'Romania', 'Russia', 'Rwanda', 'Saint Kitts and Nevis', 'Saint Lucia', 
-        'Saint Vincent and the Grenadines', 'Samoa', 'San Marino', 'Sao Tome and Principe', 'Saudi Arabia', 'Senegal', 'Serbia', 'Seychelles', 
-        'Sierra Leone', 'Singapore', 'Slovakia', 'Slovenia', 'Solomon Islands', 'Somalia', 'South Africa', 'South Korea', 'South Sudan', 
-        'Spain', 'Sri Lanka', 'Sudan', 'Suriname', 'Sweden', 'Switzerland', 'Syria', 'Taiwan', 'Tajikistan', 'Tanzania', 'Thailand', 
-        'Togo', 'Tonga', 'Trinidad and Tobago', 'Tunisia', 'Turkey', 'Turkmenistan', 'Tuvalu', 'Uganda', 'Ukraine', 'United Arab Emirates', 
-        'United Kingdom', 'United States', 'Uruguay', 'Uzbekistan', 'Vanuatu', 'Vatican City', 'Venezuela', 'Vietnam', 'Yemen', 'Zambia', 
-        'Zimbabwe'
+        'Afghanistan', 'Albania', 'Algeria', 'Andorra', 'Angola', 'Argentina', 'Armenia', 'Australia',
+        'Austria', 'Azerbaijan', 'Bahamas', 'Bahrain', 'Bangladesh', 'Barbados', 'Belarus', 'Belgium',
+        'Belize', 'Benin', 'Bhutan', 'Bolivia', 'Bosnia and Herzegovina', 'Botswana', 'Brazil', 'Brunei',
+        'Bulgaria', 'Burkina Faso', 'Burundi', 'Cambodia', 'Cameroon', 'Canada', 'Chad', 'Chile', 'China',
+        'Colombia', 'Costa Rica', 'Croatia', 'Cuba', 'Cyprus', 'Czech Republic', 'Denmark', 'Djibouti',
+        'Dominica', 'Dominican Republic', 'Ecuador', 'Egypt', 'El Salvador', 'Estonia', 'Ethiopia', 'Fiji',
+        'Finland', 'France', 'Gabon', 'Gambia', 'Georgia', 'Germany', 'Ghana', 'Greece', 'Guatemala', 'Guinea',
+        'Guyana', 'Haiti', 'Honduras', 'Hungary', 'Iceland', 'India', 'Indonesia', 'Iran', 'Iraq', 'Ireland',
+        'Israel', 'Italy', 'Jamaica', 'Japan', 'Jordan', 'Kazakhstan', 'Kenya', 'Kuwait', 'Kyrgyzstan',
+        'Laos', 'Latvia', 'Lebanon', 'Lesotho', 'Liberia', 'Libya', 'Lithuania', 'Luxembourg', 'Madagascar',
+        'Malawi', 'Malaysia', 'Maldives', 'Mali', 'Malta', 'Mauritania', 'Mauritius', 'Mexico', 'Moldova',
+        'Monaco', 'Mongolia', 'Montenegro', 'Morocco', 'Mozambique', 'Myanmar', 'Namibia', 'Nepal',
+        'Netherlands', 'New Zealand', 'Nicaragua', 'Niger', 'Nigeria', 'North Korea', 'North Macedonia',
+        'Norway', 'Oman', 'Pakistan', 'Panama', 'Paraguay', 'Peru', 'Philippines', 'Poland', 'Portugal',
+        'Qatar', 'Romania', 'Russia', 'Rwanda', 'Saudi Arabia', 'Senegal', 'Serbia', 'Seychelles',
+        'Sierra Leone', 'Singapore', 'Slovakia', 'Slovenia', 'Somalia', 'South Africa', 'South Korea',
+        'Spain', 'Sri Lanka', 'Sudan', 'Suriname', 'Sweden', 'Switzerland', 'Syria', 'Taiwan', 'Tajikistan',
+        'Tanzania', 'Thailand', 'Togo', 'Trinidad and Tobago', 'Tunisia', 'Turkey', 'Turkmenistan', 'Uganda',
+        'Ukraine', 'United Arab Emirates', 'United Kingdom', 'United States', 'Uruguay', 'Uzbekistan',
+        'Vatican City', 'Venezuela', 'Vietnam', 'Yemen', 'Zambia', 'Zimbabwe'
     ];
 
     const rewards = ['legendary', 'common', 'mythic', 'uncommon', 'pet', 'iron', 'gold'];
-    
-    if (!args[0] || !countries.includes(args[0])) {
-        let button = countries.map((a) => 
-        [
-          '',
-          a,
-          'Terbang ke negara: ' + a,
-          '.pesawat ' + a
-          ])
-          conn.sendList(m.chat, '', 'Pilihlah Negara Di bawah ini', wm, 'Pilih Disini', 'List negara', button, m)
-          return
+    const destination = args[0];
+
+    if (!destination || !countries.includes(destination)) {
+        return conn.reply(m.chat, `✈️ Pilih tujuan negara dari daftar berikut:\n\n${countries.map(n => '• ' + n).join('\n')}`, m);
     }
 
-    const destination = args[0];
-    const previousCity = global.db.data.users[m.sender].currentCity || countries[Math.floor(Math.random() * countries.length)];
-    
-
-    const randomReward = rewards[Math.floor(Math.random() * rewards.length)];
-    
-    const lastPlayed = global.db.data.users[m.sender].lastFlight || 0;
-    const cooldown = 6 * 60 * 60 * 1000; // 6 hours in milliseconds
+    const user = global.db.data.users[m.sender];
+    const previousCity = user.currentCity || countries[Math.floor(Math.random() * countries.length)];
+    const lastPlayed = user.lastFlight || 0;
+    const cooldown = 6 * 60 * 60 * 1000;
 
     if (Date.now() - lastPlayed < cooldown) {
         const remainingTime = cooldown - (Date.now() - lastPlayed);
-        const hours = Math.floor(remainingTime / (60 * 60 * 1000));
-        const minutes = Math.floor((remainingTime % (60 * 60 * 1000)) / (60 * 1000));
-        return conn.reply(m.chat, `⏳ Tunggu ${hours} jam ${minutes} menit lagi untuk bermain lagi.`, m);
+        const hours = Math.floor(remainingTime / (1000 * 60 * 60));
+        const minutes = Math.floor((remainingTime % (1000 * 60 * 60)) / (1000 * 60));
+        return conn.reply(m.chat, `⏳ Tunggu *${hours} jam ${minutes} menit* lagi untuk bermain lagi.`, m);
     }
-    const { img, desc } = await distance(previousCity.toLowerCase(), destination.toLowerCase());
-    let { key } = await conn.sendMessage(m.chat, { image: img, caption: `*[ Penerbangan menuju ${destination} ]*\n\n> *\`Desc:\`* ${desc}` }, { quoted: m });
-    await conn.delay(5000)
 
-    global.db.data.users[m.sender].lastFlight = Date.now();
-    global.db.data.users[m.sender].currentCity = destination;
+    // Fungsi generate deskripsi dan gambar lokal (tanpa scrape.js)
+    const distanceInfo = (from, to) => {
+        return {
+            img: { url: `https://i.supa.codes/n-U7J0` },
+            desc: `Perjalanan dari ${from} ke ${to} memakan waktu lama namun penuh pengalaman menarik.`
+        };
+    };
 
-    // Menghitung jumlah kali bermain
-    global.db.data.users[m.sender].flightCount = (global.db.data.users[m.sender].flightCount || 0) + 1;
-    const playCount = global.db.data.users[m.sender].flightCount;
+    const { img, desc } = distanceInfo(previousCity, destination);
 
-    // Menghitung hadiah berdasarkan jumlah kali bermain dan rarity
-    const randomExp = (Math.floor(Math.random() * 100) + 1) * playCount; // Random exp between 1 and 100, multiplied by play count
-    const randomMoney = (Math.floor(Math.random() * 1000) + 1) * playCount; // Random money between 1 and 1000, multiplied by play count
+    await conn.sendMessage(m.chat, {
+        image: img,
+        caption: `*[ Penerbangan menuju ${destination} ]*\n\n> *Deskripsi:* ${desc}`
+    }, { quoted: m });
 
-    let rewardAmount;
-    switch (randomReward) {
-        case 'legendary':
-            rewardAmount = Math.floor(Math.random() * 5) + 1; // 1 to 5
-            break;
-        case 'mythic':
-            rewardAmount = Math.floor(Math.random() * 3) + 1; // 1 to 3
-            break;
+    await conn.delay(4000);
+
+    // Update user data
+    user.lastFlight = Date.now();
+    user.currentCity = destination;
+    user.flightCount = (user.flightCount || 0) + 1;
+    const playCount = user.flightCount;
+
+    const rewardType = rewards[Math.floor(Math.random() * rewards.length)];
+    const rewardExp = (Math.floor(Math.random() * 100) + 20) * playCount;
+    const rewardMoney = (Math.floor(Math.random() * 1000) + 100) * playCount;
+
+    let rewardAmount = 1;
+    switch (rewardType) {
+        case 'legendary': rewardAmount = Math.floor(Math.random() * 4) + 1; break;
+        case 'mythic': rewardAmount = Math.floor(Math.random() * 3) + 1; break;
         case 'common':
-        case 'uncommon ':
-            rewardAmount = Math.floor(Math.random() * 10) + 1; // 1 to 10
-            break;
-        case 'pet':
-            rewardAmount = 1; // Always 1
-            break;
+        case 'uncommon': rewardAmount = Math.floor(Math.random() * 10) + 1; break;
+        case 'pet': rewardAmount = 1; break;
         case 'iron':
-        case 'gold':
-            rewardAmount = Math.floor(Math.random() * 50) + 1; // 1 to 50
-            break;
-        default:
-            rewardAmount = 1; // Default for money and exp
+        case 'gold': rewardAmount = Math.floor(Math.random() * 30) + 10; break;
     }
 
-    // Menyimpan hadiah di database pengguna
-    global.db.data.users[m.sender].money = (global.db.data.users[m.sender].money || 0) + randomMoney;
-    global.db.data.users[m.sender].exp = (global.db.data.users[m.sender].exp || 0) + randomExp;
-    global.db.data.users[m.sender][randomReward] = (global.db.data.users[m.sender][randomReward] || 0) + rewardAmount;
+    user.money = (user.money || 0) + rewardMoney;
+    user.exp = (user.exp || 0) + rewardExp;
+    user[rewardType] = (user[rewardType] || 0) + rewardAmount;
 
-    return conn.sendMessage(m.chat, { image: img, caption: `✈️ Perjalanan dari ${previousCity} ke ${destination} berhasil! 🌍\n\nAnda mendapatkan:\n💰 ${randomMoney} money\n📦 ${rewardAmount} ${randomReward}\n✨ ${randomExp} exp\n\nSelamat menikmati hadiah Anda!`, edit: key }, m);
+    return conn.sendMessage(m.chat, {
+        image: img,
+        caption: `✈️ *Penerbangan selesai!*\nDari: *${previousCity}*\nTujuan: *${destination}*\n\n🎁 Hadiah:\n- ${rewardAmount} *${rewardType}*\n- ${rewardExp} *exp*\n- ${rewardMoney} *money*`
+    }, { quoted: m });
 };
 
-handler.command = ['aircraft']
-handler.help = ['aircraft'];
-handler.tags = ['rpg', 'game']
-handler.group = true
+handler.command = ['aircraft'];
+handler.help = ['aircraft [negara]'];
+handler.tags = ['rpg'];
+handler.group = true;
+
 module.exports = handler;
