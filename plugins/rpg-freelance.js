@@ -1,16 +1,16 @@
 let handler = async (m, { conn, usedPrefix, command, args }) => {
-    const MAX_FREELANCE_PER_DAY = 3;
+    const MAX_FREELANCE_PER_DAY = 2;
 
     // Data pekerjaan freelance
     const jobs = [
-        { name: 'Penulis Artikel', difficulty: 'mudah', reward: { limit: 50, money: 1000, exp: 100 } },
-        { name: 'Desainer Grafis', difficulty: 'sedang', reward: { limit: 100, money: 3000, exp: 300 } },
-        { name: 'Programmer', difficulty: 'sulit', reward: { limit: 200, money: 7000, exp: 700 } },
-        { name: 'Penerjemah', difficulty: 'mudah', reward: { limit: 60, money: 1500, exp: 150 } },
-        { name: 'Konsultan Bisnis', difficulty: 'sedang', reward: { limit: 120, money: 4000, exp: 400 } },
-        { name: 'Data Analyst', difficulty: 'sulit', reward: { limit: 250, money: 10000, exp: 1000 } },
-        { name: 'Fotografer', difficulty: 'mudah', reward: { limit: 70, money: 2000, exp: 200 } },
-        { name: 'Pengembang Web', difficulty: 'sulit', reward: { limit: 300, money: 12000, exp: 1200 } }
+        { name: 'Penulis Artikel', difficulty: 'mudah', reward: { limit: 5, money: 100, exp: 10 } },
+        { name: 'Desainer Grafis', difficulty: 'sedang', reward: { limit: 10, money: 300, exp: 30 } },
+        { name: 'Programmer', difficulty: 'sulit', reward: { limit: 20, money: 700, exp: 70 } },
+        { name: 'Penerjemah', difficulty: 'mudah', reward: { limit: 60, money: 150, exp: 150 } },
+        { name: 'Konsultan Bisnis', difficulty: 'sedang', reward: { limit: 80, money: 400, exp: 400 } },
+        { name: 'Data Analyst', difficulty: 'sulit', reward: { limit: 85, money: 1000, exp: 1000 } },
+        { name: 'Fotografer', difficulty: 'mudah', reward: { limit: 90, money: 2000, exp: 200 } },
+        { name: 'Pengembang Web', difficulty: 'sulit', reward: { limit: 100, money: 1200, exp: 1200 } }
     ];
 
     // Mengambil data user
