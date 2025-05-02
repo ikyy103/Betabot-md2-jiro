@@ -1,39 +1,28 @@
-let handler = async (m, { conn, args, text, command, usedPrefix }) => {
-    let user;
+let handler = async (m, { conn, text, usedPrefix, command }) => {
+  if (!global.owner.some(([id]) => id === m.sender))
+    return m.reply('Fitur ini hanya bisa dipakai owner bot.')
 
-    // Jika ada yang ditag
-    if (m.mentionedJid && m.mentionedJid[0]) {
-        user = m.mentionedJid[0];
-    }
+  let number
+  if (m.quoted) {
+    number = m.quoted.sender
+  } else if (text) {
+    number = text.replace(/[^0-9]/g, '') + '@s.whatsapp.net'
+  } else {
+    return m.reply(`Ketik nomor, tag, atau reply pesan target yang mau dicabut ownernya.\nContoh: *.unowner 628xxxxxx*`)
+  }
 
-    // Jika reply pesan
-    else if (m.quoted) {
-        user = m.quoted.sender;
-    }
+  let index = global.owner.findIndex(([id]) => id === number)
+  if (index < 0) return m.reply(`Nomor itu tidak terdaftar sebagai owner.`)
 
-    // Jika input nomor
-    else if (args[0]) {
-        let input = args[0].replace(/[^0-9]/g, '');
-        if (!input) throw `Nomor tidak valid!`;
-        user = input + '@s.whatsapp.net';
-    } else {
-        throw `Contoh penggunaan:\n${usedPrefix + command} @user / balas pesan / 628xxx`;
-    }
+  global.owner.splice(index, 1)
+  m.reply(`Berhasil menghapus @${number.split('@')[0]} dari daftar owner.`, {
+    mentions: [number]
+  })
+}
 
-    // Cari index di list owner
-    let index = global.owner.findIndex(([jid]) => jid === user);
+handler.help = ['unowner <nomor|reply|tag>']
+handler.tags = ['owner']
+handler.command = /^unowner$/i
+handler.owner = true
 
-    if (index < 0) throw 'User tersebut bukan owner.';
-    if (index === 0) throw 'Tidak bisa menghapus owner utama.';
-
-    // Hapus dari list owner
-    global.owner.splice(index, 1);
-    m.reply(`Sukses menghapus ${user} dari daftar owner.`);
-};
-
-handler.help = ['unowner @user / reply / nomor'];
-handler.tags = ['owner'];
-handler.command = /^unowner$/i;
-handler.owner = true;
-
-module.exports = handler;
+module.exports = handler
