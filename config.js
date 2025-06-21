@@ -60,7 +60,7 @@ global.APIKeys = {
   'https://api.betabotz.eu.org': global.lann, 
   'https://api.botcahx.eu.org': global.btc,
   'https://api.maelyn.tech': global.maelyn,
-  'https://fastrestapis.fasturl.cloud': global.fastrestapis
+  'https://fastrestapis.fasturl.cloud': global.fastrestapis,
   'https://doodapi.com': global.dood
 };
 
